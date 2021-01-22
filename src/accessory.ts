@@ -40,58 +40,68 @@ let hap: HAP;
  */
 export = (api: API) => {
   hap = api.hap;
-  api.registerAccessory("ExampleSwitch", ExampleSwitch);
+  api.registerAccessory("GooveLedStrip", GooveLedStrip);
 };
 
-class ExampleSwitch implements AccessoryPlugin {
-
+class GooveLedStrip implements AccessoryPlugin {
   private readonly log: Logging;
   private readonly name: string;
-  private switchOn = false;
+  private brightness = 0;
+  private hue = 0.0;
+  private saturation = 0.0;
 
-  private readonly switchService: Service;
+  private readonly lightService: Service;
   private readonly informationService: Service;
-
+  
   constructor(log: Logging, config: AccessoryConfig, api: API) {
     this.log = log;
     this.name = config.name;
 
-    this.switchService = new hap.Service.Switch(this.name);
-    this.switchService.getCharacteristic(hap.Characteristic.On)
+    this.lightService = new hap.Service.Lightbulb(this.name);
+    this.lightService.getCharacteristic(hap.Characteristic.On)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
-        log.info("Current state of the switch was returned: " + (this.switchOn? "ON": "OFF"));
-        callback(undefined, this.switchOn);
+        callback(undefined, this.brightness == 0);
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
-        this.switchOn = value as boolean;
-        log.info("Switch state was set to: " + (this.switchOn? "ON": "OFF"));
+        this.brightness = value ? 100 : 0;
+      })
+    this.lightService.getCharacteristic(hap.Characteristic.Brightness)
+      .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        callback(undefined, this.brightness);
+      })
+      .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
+        this.brightness = value as number;
         callback();
-      });
-
+      })
+    this.lightService.getCharacteristic(hap.Characteristic.Hue)
+      .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        callback(undefined, this.hue);
+      })
+      .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
+        this.hue = value as number;
+        callback();
+      })
+    this.lightService.getCharacteristic(hap.Characteristic.Saturation)
+      .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        callback(undefined, this.saturation);
+      })
+      .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
+        this.saturation = value as number;
+        callback();
+      })
+    
     this.informationService = new hap.Service.AccessoryInformation()
-      .setCharacteristic(hap.Characteristic.Manufacturer, "Custom Manufacturer")
-      .setCharacteristic(hap.Characteristic.Model, "Custom Model");
-
-    log.info("Switch finished initializing!");
+      .setCharacteristic(hap.Characteristic.Manufacturer, "Goove")
+      .setCharacteristic(hap.Characteristic.Model, "H6139");
   }
 
-  /*
-   * This method is optional to implement. It is called when HomeKit ask to identify the accessory.
-   * Typical this only ever happens at the pairing process.
-   */
-  identify(): void {
-    this.log("Identify!");
-  }
+  
 
-  /*
-   * This method is called directly after creation of this instance.
-   * It should return all services which should be added to the accessory.
-   */
   getServices(): Service[] {
     return [
       this.informationService,
-      this.switchService,
+      this.lightService
     ];
   }
-
 }
+
