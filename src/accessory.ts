@@ -60,35 +60,43 @@ class GooveLedStrip implements AccessoryPlugin {
     this.lightService = new hap.Service.Lightbulb(this.name);
     this.lightService.getCharacteristic(hap.Characteristic.On)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        log.info("Returning on status: " + this.brightness ? "on" : "off");
         callback(undefined, this.brightness == 0);
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
+        log.info("Setting on status: " + this.brightness ? "on" : "off");
         this.brightness = value ? 100 : 0;
-      })
+      });
     this.lightService.getCharacteristic(hap.Characteristic.Brightness)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        log.info("Returning brightness: " + this.brightness);
         callback(undefined, this.brightness);
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
+        log.info("Setting brightness: " + value);
         this.brightness = value as number;
         callback();
-      })
+      });
     this.lightService.getCharacteristic(hap.Characteristic.Hue)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        log.info("Returning hue: " + this.hue);
         callback(undefined, this.hue);
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
+        log.info("Setting hue: " + value);
         this.hue = value as number;
         callback();
-      })
+      });
     this.lightService.getCharacteristic(hap.Characteristic.Saturation)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        log.info("Returning saturation: " + this.saturation);
         callback(undefined, this.saturation);
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
+        log.info("Setting saturation: " + value);
         this.saturation = value as number;
         callback();
-      })
+      });
     
     this.informationService = new hap.Service.AccessoryInformation()
       .setCharacteristic(hap.Characteristic.Manufacturer, "Goove")
