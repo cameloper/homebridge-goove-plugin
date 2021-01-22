@@ -38,10 +38,9 @@ let hap: HAP;
 
 const axios = require('axios');
 
-enum RequestType {
-  Connect,
-  SetBrightness,
-  SetColor
+enum GoveeCharacteristic {
+  Brightness = "brightness",
+  Color = "color"
 }
 
 /*
@@ -94,6 +93,7 @@ class GoveeLedStrip implements AccessoryPlugin {
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
         log.info("Setting brightness: " + value);
+        this.setRequest(GoveeCharacteristic.Brightness, value);
         this.brightness = value as number;
         callback();
       });
@@ -139,6 +139,24 @@ class GoveeLedStrip implements AccessoryPlugin {
       url: '/connect',
       params:{
         keepAlive: keepAlive
+      }
+    })
+    .then(function (response: AxiosResponse) {
+      log.debug(response.status.toString());
+    })
+    .catch(function (error: AxiosError) {
+      log.error(error.message);
+    });
+  }
+
+  setRequest(type: GoveeCharacteristic, value: any) {
+    const log = this.log;
+    axios({
+      method: 'post',
+      url: '/set',
+      params:{
+        char: type,
+        value: value
       }
     })
     .then(function (response: AxiosResponse) {
