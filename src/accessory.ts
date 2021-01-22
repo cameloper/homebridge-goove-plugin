@@ -60,12 +60,12 @@ class GooveLedStrip implements AccessoryPlugin {
     this.lightService = new hap.Service.Lightbulb(this.name);
     this.lightService.getCharacteristic(hap.Characteristic.On)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
-        log.info("Returning on status: " + this.brightness ? "on" : "off");
-        callback(undefined, this.brightness == 0);
+        log.info("Returning on status: " + (this.brightness ? "on" : "off"));
+        callback(undefined, (this.brightness == 0));
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
-        log.info("Setting on status: " + this.brightness ? "on" : "off");
-        this.brightness = value ? 100 : 0;
+        log.info("Setting on status: " + (this.brightness ? "on" : "off"));
+        this.brightness = (value ? 100 : 0);
       });
     this.lightService.getCharacteristic(hap.Characteristic.Brightness)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
