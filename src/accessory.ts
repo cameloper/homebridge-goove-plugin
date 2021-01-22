@@ -83,7 +83,6 @@ class GoveeLedStrip implements AccessoryPlugin {
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
         log.info("Setting on status: " + (this.brightness != 0 ? "on" : "off"));
-        this.brightness = (value ? this.brightness : 0);
         this.setRequest(GoveeCharacteristic.Brightness, this.brightness);
         callback();
       });
@@ -165,7 +164,7 @@ class GoveeLedStrip implements AccessoryPlugin {
       }
     })
     .then(function (response: AxiosResponse) {
-      log.debug(response.status.toString());
+      log.debug(response.data);
     })
     .catch(function (error: AxiosError) {
       log.error(error.message);
@@ -173,7 +172,7 @@ class GoveeLedStrip implements AccessoryPlugin {
   }
 
   hslToHex(h: number, s: number): string {
-    const l = 1;
+    const l = 0.5;
     const a = s * Math.min(l, 1 - l) / 100;
     const f = (n: number) => {
       const k = (n + h / 30) % 12;
