@@ -35,6 +35,14 @@ import {
  */
 let hap: HAP;
 
+const axios = require('axios');
+
+enum RequestType {
+  Connect,
+  SetBrightness,
+  SetColor
+}
+
 /*
  * Initializer function called when the plugin is loaded.
  */
@@ -47,6 +55,7 @@ class GoveeLedStrip implements AccessoryPlugin {
   private readonly log: Logging;
   private readonly name: string;
   private readonly serverAddress: string;
+  private readonly keepAlive: boolean;
   private brightness = 0;
   private hue = 0.0;
   private saturation = 0.0;
@@ -58,6 +67,9 @@ class GoveeLedStrip implements AccessoryPlugin {
     this.log = log;
     this.name = config.name;
     this.serverAddress = config.serverAddress;
+    this.keepAlive = config.keepAlive;
+
+    this.connectionRequest(this.keepAlive);
 
     this.lightService = new hap.Service.Lightbulb(this.name);
     this.lightService.getCharacteristic(hap.Characteristic.On)
@@ -113,6 +125,20 @@ class GoveeLedStrip implements AccessoryPlugin {
       this.informationService,
       this.lightService
     ];
+  }
+
+  connectionRequest(keepAlive: boolean) {
+    //192.168.1.89:5000/connect?keepAlive=true
+    const log = this.log;
+    axios.post('/connect', {
+      keepAlive: keepAlive
+    })
+    .then(function (response: any) {
+      log.debug(response);
+    })
+    .catch(function (error: any) {
+      log.error(error);
+    });
   }
 }
 
