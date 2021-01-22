@@ -55,6 +55,7 @@ class GoveeLedStrip implements AccessoryPlugin {
   private readonly log: Logging;
   private readonly name: string;
   private readonly serverAddress: string;
+  private readonly serverPort: number;
   private readonly keepAlive: boolean;
   private brightness = 0;
   private hue = 0.0;
@@ -67,6 +68,7 @@ class GoveeLedStrip implements AccessoryPlugin {
     this.log = log;
     this.name = config.name;
     this.serverAddress = config.serverAddress;
+    this.serverPort = config.serverPort;
     this.keepAlive = config.keepAlive;
 
     this.connectionRequest(this.keepAlive);
@@ -128,9 +130,9 @@ class GoveeLedStrip implements AccessoryPlugin {
   }
 
   connectionRequest(keepAlive: boolean) {
-    //192.168.1.89:5000/connect?keepAlive=true
     const log = this.log;
-    axios.post('/connect', {
+    const url = `${this.serverAddress}:${this.serverPort}/connect`;
+    axios.post(url, {
       keepAlive: keepAlive
     })
     .then(function (response: any) {
