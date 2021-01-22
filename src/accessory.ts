@@ -78,12 +78,13 @@ class GoveeLedStrip implements AccessoryPlugin {
     this.lightService = new hap.Service.Lightbulb(this.name);
     this.lightService.getCharacteristic(hap.Characteristic.On)
       .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
-        log.info("Returning on status: " + (this.brightness ? "on" : "off"));
-        callback(undefined, (this.brightness == 0));
+        log.info("Returning on status: " + (this.brightness != 0 ? "on" : "off"));
+        callback(undefined, (this.brightness != 0));
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
-        log.info("Setting on status: " + (this.brightness ? "on" : "off"));
-        this.brightness = (value ? 100 : 0);
+        log.info("Setting on status: " + (this.brightness != 0 ? "on" : "off"));
+        this.brightness = (value ? this.brightness : 0);
+        this.setRequest(GoveeCharacteristic.Brightness, this.brightness);
         callback();
       });
     this.lightService.getCharacteristic(hap.Characteristic.Brightness)
@@ -104,7 +105,7 @@ class GoveeLedStrip implements AccessoryPlugin {
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
         log.info("Setting hue: " + value);
-        const color = this.hslToHex(value as number, this.saturation, this.brightness);
+        const color = this.hslToHex(value as number, this.saturation);
         this.setRequest(GoveeCharacteristic.Color, color);
         this.hue = value as number;
         callback();
@@ -116,7 +117,7 @@ class GoveeLedStrip implements AccessoryPlugin {
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
         log.info("Setting saturation: " + value);
-        const color = this.hslToHex(this.hue, value as number, this.brightness);
+        const color = this.hslToHex(this.hue, value as number);
         this.setRequest(GoveeCharacteristic.Color, color);
         this.saturation = value as number;
         callback();
@@ -171,8 +172,8 @@ class GoveeLedStrip implements AccessoryPlugin {
     });
   }
 
-  hslToHex(h: number, s: number, l: number): string {
-    l /= 100;
+  hslToHex(h: number, s: number): string {
+    const l = 1;
     const a = s * Math.min(l, 1 - l) / 100;
     const f = (n: number) => {
       const k = (n + h / 30) % 12;
