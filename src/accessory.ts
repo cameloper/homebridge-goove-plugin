@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from "axios";
 import {
   AccessoryConfig,
   AccessoryPlugin,
@@ -70,6 +71,8 @@ class GoveeLedStrip implements AccessoryPlugin {
     this.serverAddress = config.serverAddress;
     this.serverPort = config.serverPort;
     this.keepAlive = config.keepAlive;
+  
+    axios.defaults.baseURL = `http://${this.serverAddress}:${this.serverPort}`;
 
     this.connectionRequest(this.keepAlive);
 
@@ -131,15 +134,18 @@ class GoveeLedStrip implements AccessoryPlugin {
 
   connectionRequest(keepAlive: boolean) {
     const log = this.log;
-    const url = `${this.serverAddress}:${this.serverPort}/connect`;
-    axios.post(url, {
-      keepAlive: keepAlive
+    axios({
+      method: 'post',
+      url: '/connect',
+      params:{
+        keepAlive: keepAlive
+      }
     })
-    .then(function (response: any) {
-      log.debug(response);
+    .then(function (response: AxiosResponse) {
+      log.debug(response.status.toString());
     })
-    .catch(function (error: any) {
-      log.error(error);
+    .catch(function (error: AxiosError) {
+      log.error(error.message);
     });
   }
 }
