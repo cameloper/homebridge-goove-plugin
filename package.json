@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-accessory-example",
-  "version": "1.0.0",
-  "description": "An example accessory plugin for homebridge written in Typescript",
+  "name": "homebridge-goove-plugin",
+  "version": "0.1.0",
+  "description": "Hombridge plugin to control my goove led strip.",
   "main": "dist/accessory.js",
   "scripts": {
     "clean": "rimraf ./dist",
@@ -10,24 +10,24 @@
     "postpublish": "npm run clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Andreas Bauer <mail@anderl-bauer.de>",
+  "author": "Ihsan Batughan Yilmaz <cameloper@cameloper.com>",
   "engines": {
     "homebridge": ">=1.0.0"
   },
   "keywords": [
     "homebridge-plugin"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "files": [
     "LICENSE",
     "dist"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/homebridge/homebridge-examples.git"
+    "url": "git://github.com/cameloper/homebridge-goove-plugin.git"
   },
   "bugs": {
-    "url": "http://github.com/homebridge/homebridge-examples/issues"
+    "url": "https://github.com/cameloper/homebridge-goove-plugin/issues"
   },
   "devDependencies": {
     "@types/node": "10.17.19",
