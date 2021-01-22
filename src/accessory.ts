@@ -82,8 +82,10 @@ class GoveeLedStrip implements AccessoryPlugin {
         callback(undefined, (this.brightness != 0));
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
-        log.info("Setting on status: " + (this.brightness != 0 ? "on" : "off"));
-        this.setRequest(GoveeCharacteristic.Brightness, this.brightness);
+        log.info("Setting on status: " + (value ? "on" : "off"));
+        const newBrightness = this.brightness >= 10 ? this.brightness : 100;
+        this.setRequest(GoveeCharacteristic.Brightness, newBrightness);
+        this.brightness = newBrightness;
         callback();
       });
     this.lightService.getCharacteristic(hap.Characteristic.Brightness)
@@ -146,7 +148,7 @@ class GoveeLedStrip implements AccessoryPlugin {
       }
     })
     .then(function (response: AxiosResponse) {
-      log.debug(response.status.toString());
+      log.debug(response.data);
     })
     .catch(function (error: AxiosError) {
       log.error(error.message);
