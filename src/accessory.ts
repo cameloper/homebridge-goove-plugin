@@ -40,12 +40,13 @@ let hap: HAP;
  */
 export = (api: API) => {
   hap = api.hap;
-  api.registerAccessory("GooveLedStrip", GooveLedStrip);
+  api.registerAccessory("GoveeLedStrip", GoveeLedStrip);
 };
 
-class GooveLedStrip implements AccessoryPlugin {
+class GoveeLedStrip implements AccessoryPlugin {
   private readonly log: Logging;
   private readonly name: string;
+  private readonly serverAddress: string;
   private brightness = 0;
   private hue = 0.0;
   private saturation = 0.0;
@@ -56,6 +57,7 @@ class GooveLedStrip implements AccessoryPlugin {
   constructor(log: Logging, config: AccessoryConfig, api: API) {
     this.log = log;
     this.name = config.name;
+    this.serverAddress = config.serverAddress;
 
     this.lightService = new hap.Service.Lightbulb(this.name);
     this.lightService.getCharacteristic(hap.Characteristic.On)
@@ -100,7 +102,7 @@ class GooveLedStrip implements AccessoryPlugin {
       });
     
     this.informationService = new hap.Service.AccessoryInformation()
-      .setCharacteristic(hap.Characteristic.Manufacturer, "Goove")
+      .setCharacteristic(hap.Characteristic.Manufacturer, "Govee")
       .setCharacteristic(hap.Characteristic.Model, "H6139");
   }
 

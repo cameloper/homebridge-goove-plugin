@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-goove-plugin",
+  "name": "homebridge-govee-plugin",
   "version": "0.1.0",
-  "description": "Hombridge plugin to control my goove led strip.",
+  "description": "Hombridge plugin to control my govee led strip.",
   "main": "dist/accessory.js",
   "scripts": {
     "clean": "rimraf ./dist",
@@ -24,10 +24,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/cameloper/homebridge-goove-plugin.git"
+    "url": "git://github.com/cameloper/homebridge-govee-plugin.git"
   },
   "bugs": {
-    "url": "https://github.com/cameloper/homebridge-goove-plugin/issues"
+    "url": "https://github.com/cameloper/homebridge-govee-plugin/issues"
   },
   "devDependencies": {
     "@types/node": "10.17.19",
