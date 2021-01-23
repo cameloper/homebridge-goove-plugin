@@ -83,9 +83,9 @@ class GoveeLedStrip implements AccessoryPlugin {
       })
       .on(CharacteristicEventTypes.SET, (value: CharacteristicValue, callback: CharacteristicSetCallback) => {
         log.info("Setting on status: " + (value ? "on" : "off"));
-        const newBrightness = this.brightness >= 10 ? this.brightness : 100;
-        this.setRequest(GoveeCharacteristic.Brightness, newBrightness);
-        this.brightness = newBrightness;
+        const nB = (value as boolean) ? (this.brightness >= 10 ? this.brightness : 100) : 0;
+        this.setRequest(GoveeCharacteristic.Brightness, nB);
+        this.brightness = nB;
         callback();
       });
     this.lightService.getCharacteristic(hap.Characteristic.Brightness)
